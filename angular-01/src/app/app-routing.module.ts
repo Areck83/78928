@@ -4,11 +4,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { InicioComponent } from './inicio/inicio.component';
 import { AcercaComponent } from './acerca/acerca.component';
 import { ContactoComponent } from './contacto/contacto.component';
+import { DatosComponent } from './datos/datos.component';
+import { FormularioComponent } from './formulario/formulario.component';
+import { MostrarComponent } from './mostrar/mostrar.component';
 
-const rutas:Routes = [
-  {path: 'inicio',component: InicioComponent},
-  {path: 'acerca',component: AcercaComponent},
-  {path: 'contacto',component: ContactoComponent},
+const rutas: Routes = [
+  {path: 'inicio', component : InicioComponent},
+  {path: 'acerca', component : AcercaComponent},
+  {path: 'contacto', component : ContactoComponent},
+  {path: 'datos', component : DatosComponent},
+  {path: 'formulario', component : FormularioComponent},
+  {path: 'mostrar', component : MostrarComponent}
 ];
 
 @NgModule({
