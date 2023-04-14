@@ -1,0 +1,20 @@
+<!-- <header>
+    <nav>
+        <ul>
+            <li *ngFor="let opcion of opciones">
+                <a class="btn btn-primary" routerLink="{{opcion}}">{{opcion}}</a>
+            </li>
+        </ul>
+    </nav>
+</header> -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Chunche Ambiental</a>
+        <ul class="navbar-nav">
+            <li class = "nav-item" *ngFor="let opcion of opciones">
+                <a class="nav-link" routerLink="{{opcion}}">{{opcion}}</a>
+            </li>
+        </ul>
+      </div>
+</nav>

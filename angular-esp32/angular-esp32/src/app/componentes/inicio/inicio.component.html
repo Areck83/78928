@@ -1,0 +1,89 @@
+<!-- <h1>Prueba de la transaccion de datos json</h1> (borrar esta cosa)-->
+
+<!-- {{ datos | json }} -->
+{{datos | keyvalue}}
+
+
+<!--(DEBUG) esta otra sirve para traer elementos del json especificados de manera asincrona
+     <ul>
+    <li *ngFor="let item of datos$ | async">
+        {{item.id}}
+    </li>
+</ul> -->
+
+
+<div class="card mb-3">
+    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.thoughtco.com%2Fthmb%2F-gWsXKS4xZdd1DvOd-YSRUJs3K8%3D%2F5312x2988%2Ffilters%3Afill(auto%2C1)%2Fclose-up-of-thermometer-594852787-5abd1c1643a1030036aacdf4.jpg&f=1&nofb=1&ipt=4ab3c477423268ca09740b2f8d3468f52b8e9091a70c95855dc697426dad1b47&ipo=images" class="card-img-top img-fluid" alt="Temperatura"/>
+    <div class="card-body">
+      <h5 class="card-title">Temperatura ambiental</h5>
+      <p class="card-text">
+        A continuación se muestran los valores que contiene el chunchillo acerca de la temperatura ambiental
+      </p>
+      <p class="card-text">
+        <small class="text-muted">Datos actualizados cada minuto</small>
+      </p>
+    </div>
+</div>
+
+<div class="row row-cols-3 row-cols-md-5 g-4">
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fexternal-gradients-pongsakorn-tan%2F452%2Fexternal-celsius-weather-gradients-pongsakorn-tan-6.png&f=1&nofb=1&ipt=f04aba6a0b616a9525b023d9491c3b81a13c534c423df608d95f888a2881df23&ipo=images" class="card-img-top" alt="GradosCelsius"/>
+        <div class="card-body">
+          <h5 class="card-title">Grados celsius</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.temperaturaC}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fexternal-gradients-pongsakorn-tan%2F452%2Fexternal-celsius-weather-gradients-pongsakorn-tan.png&f=1&nofb=1&ipt=462ebb8cf57aaf3d4bbe501109f69ed1d5c987b7b370ac9a8ed520686b4e7387&ipo=images" class="card-img-top" alt="GradosFahrenheit"/>
+        <div class="card-body">
+          <h5 class="card-title">Grados Fahrenheit</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.temperaturaF}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3d.iconscout.com%2F3d%2Fpremium%2Fthumb%2Fhumidity-weather-6912353-5665206.png&f=1&nofb=1&ipt=7570d9ae4a6bdbc6501080917dbbab31bc83abb6b6f61a533e00752e0f16484b&ipo=images" class="card-img-top" alt="Humedad"/>
+        <div class="card-body">
+          <h5 class="card-title">Índice Humedad</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.humedad}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ficon-library.com%2Fimages%2Ffire-icon-png%2Ffire-icon-png-14.jpg&f=1&nofb=1&ipt=702617ee001f435402afb785277c3f05e1ddc8b37ffe21562a2fcd61c2822223&ipo=images" class="card-img-top" alt="CalorCentigrados"/>
+        <div class="card-body">
+          <h5 class="card-title">Calor [C°]</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+                {{item.calorC}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3d.iconscout.com%2F3d%2Fpremium%2Fthumb%2Fhot-temperature-6912350-5665203.png&f=1&nofb=1&ipt=5b9d243d7629887ba12d66b83d56a4b4b30dd8319f876a65a1a7adb7b8138035&ipo=images" class="card-img-top" alt="CalorFahrenheit"/>
+          <div class="card-body">
+            <h5 class="card-title">Calor [F°]</h5>
+            <p class="card-text" *ngFor="let item of datos$ | async">
+                  {{item.calorF}}
+            </p>
+          </div>
+        </div>
+      </div>
+
+</div>

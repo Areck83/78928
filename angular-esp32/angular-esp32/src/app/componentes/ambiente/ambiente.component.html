@@ -1,0 +1,111 @@
+<div class="card mb-3">
+    <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.healthline.com%2Fhlcmsresource%2Fimages%2FNews%2Fgeneral-health%2F052417_airpollution_THUMB_LARGE.jpg&f=1&nofb=1&ipt=1a0b2eeb1868261d659e2b201af5d36c75635ccb2abca3b3838d201a525b188a&ipo=images" class="card-img-top" alt="CalidadAmbiental"/>
+    <div class="card-body">
+      <h5 class="card-title">Calidad del aire</h5>
+      <p class="card-text">
+        ¿Hay presencia de elementos dañinos en el ambiente?
+      </p>
+      <p class="card-text">
+        <small class="text-muted">A continuación se muestran los datos </small>
+      </p>
+    </div>
+</div>
+
+<div class="row row-cols-3 row-cols-md-6 g-4">
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn2.vectorstock.com%2Fi%2Fthumb-large%2F61%2F01%2Fammonia-inhalants-rgb-color-icon-vector-34536101.jpg&f=1&nofb=1&ipt=9c4a0cfbfa2c2289d84226a6f6bd81393a0828255acff361b2d8064a1afa65c5&ipo=images" class="card-img-top" alt="Amoniaco"/>
+        <div class="card-body">
+          <h5 class="card-title">Amoniaco</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.Amoniaco}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Favantgarde%2F2x%2Fbenzene-ring.png&f=1&nofb=1&ipt=a4d65641ffea9f153b746afac0d784ea672c549a3f1feff123ae804fbddda5ea&ipo=images" class="card-img-top" alt="Benzeno"/>
+        <div class="card-body">
+          <h5 class="card-title">Benzeno</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.Benzeno}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Fhumidity-25-781162.png&f=1&nofb=1&ipt=badba161da67f2be630bda7f1a4d2f5a7c66a01d3e16d7e2dbbf7cebd11d99f5&ipo=images" class="card-img-top" alt="Humedad"/>
+        <div class="card-body">
+          <h5 class="card-title">Humedad</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+            {{item.humedad}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.atlantiqueouvertures.com%2Fwp-content%2Fuploads%2F2020%2F05%2Falcohol_cleaning_gel_shower_healthcare_icon_140652-300x300.png&f=1&nofb=1&ipt=52db019c78f9fb316642c0c7c5158f251d53ae2b68021a95c0037c3133a4f9a1&ipo=images" class="card-img-top" alt="Alcohol"/>
+        <div class="card-body">
+          <h5 class="card-title">Alcohol</h5>
+          <p class="card-text" *ngFor="let item of datos$ | async">
+                {{item.Alcohol}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn0.iconfinder.com%2Fdata%2Ficons%2Frecycle-17%2F64%2Fco2_gas_carbondioxide_cloud-256.png&f=1&nofb=1&ipt=c2a1a13a1bfe2570524c2c0bb07caecd771869ca77d4dd706390b10235ea02e5&ipo=images" class="card-img-top" alt="DioxidoDeCarbono"/>
+          <div class="card-body">
+            <h5 class="card-title">Dióxido de carbono</h5>
+            <p class="card-text" *ngFor="let item of datos$ | async">
+                  {{item.Co2}}
+            </p>
+          </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+          <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fsudan.dunloptyresafrica.com%2Fimages%2Fnitrogen.png&f=1&nofb=1&ipt=60976fd39cfa2c9aa81dfb07a99f9f73c09e628239ef3cc54b4efc43f02fae53&ipo=images" class="card-img-top" alt="Nitrogeno"/>
+          <div class="card-body">
+            <h5 class="card-title">Nitrógeno</h5>
+            <p class="card-text" *ngFor="let item of datos$ | async">
+                  {{item.Nitrogeno}}
+            </p>
+          </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fhomesourcemichiana.com%2Fwp-content%2Fuploads%2F2021%2F03%2FCarbon-Monoxide-icon.png&f=1&nofb=1&ipt=f41b0472edf381b07d074348ee3852d1d5da6fd9265ec812a248c8628316bde6&ipo=images" class="card-img-top" alt="MonóxidoDeCarbono"/>
+          <div class="card-body">
+            <h5 class="card-title">Monóxido de Carbono</h5>
+            <p class="card-text" *ngFor="let item of datos$ | async">
+                  {{item.Monoxido}}
+            </p>
+          </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card">
+          <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fair-quality-icon-14.png&f=1&nofb=1&ipt=ffd8e6e34f04986504b048063b782cffd192509cee057ece58fba1538bc4c5eb&ipo=images" class="card-img-top" alt="CalidadDeAire"/>
+          <div class="card-body">
+            <h5 class="card-title">Calidad de Aire General</h5>
+            <p class="card-text" *ngFor="let item of datos$ | async">
+                  {{item.CalidadDeAire}}
+            </p>
+          </div>
+        </div>
+    </div>
+
+</div>
