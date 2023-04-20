@@ -1,5 +1,8 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <DHTesp.h>
+#define DHTPin 15 //D15 del ESP32 DevKit
+DHTesp dht; 
 
 // Update these with values suitable for your network.
 
@@ -97,13 +100,37 @@ void loop() {
   }
   client.loop();
 
+  delay(dht.getMinimumSamplingPeriod());
+
+  float humedad = dht.getHumidity();
+  float temperatura = dht.getTemperature();
+
+  if (isnan(humedad) || isnan(temperatura)){
+    Serial.print("No se pudo leer el sensor DHT");
+    return;
+  }
+
+  //Este codigo es agregado para el dht11 
+  Serial.print(dht.getStatusString());
+  Serial.print("\t");
+  Serial.print(humedad,1);
+  Serial.print("\t\t");
+  Serial.print(temperatura,1);
+  Serial.print("\t\t");
+  Serial.print(dht.toFahrenheit(temperatura),1);
+  Serial.print("\t\t");
+  Serial.print(dht.computeHeatIndex(temperatura, humedad, false), 1);
+  Serial.print("\t\t");
+  Serial.println(dht.computeHeatIndex(dht.toFahrenheit(temperatura), humedad, true), 1);
+  delay(2000);
+
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    snprintf (msg, MSG_BUFFER_SIZE, "apoco si tilin #%ld", value);
+    snprintf (msg, MSG_BUFFER_SIZE, "En el 402 el equipo 7 #%ld", value);
     Serial.print("Publicar mensaje: ");
     Serial.println(msg);
-    client.publish("outTopic", msg);
+    client.publish("fei/cc1/temperatura", dtostrf(temperatura, 6, 2, msg));
   }
 }
