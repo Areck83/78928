@@ -1,0 +1,434 @@
+/*------------------------------------------ Estilos para maquetar el contenido -----------------------------------------------*/
+#contenedor{
+	width:100%;
+	background:#E9EDEF;
+}
+
+#medio{
+	margin:auto;
+	background-color:#E9EDEF;
+	width:100%;
+}
+
+#pie{
+	clear:both;
+	background: linear-gradient(to bottom right, #469E9B, #0E4D4B);
+	color:white;
+	text-align:center;
+	border-radius: 23px 70px 23px 70px;
+	-moz-border-radius: 23px 70px 23px 70px;
+	-webkit-border-radius: 23px 70px 23px 70px;
+	border: 3px solid #000000;
+	font: 18px 'Century Gothic' , 'Corbel';
+}
+
+/*---------------------------------------Estilos para la pagina por etiquetas--------------------------------------------------*/
+
+body{
+	font-family:Tahoma,Arial;
+	font-size:18pt;
+}
+
+p{
+	color:black;
+	margin: 30px 50px 30px 50px;
+	text-align:justify;
+	font: 20px 'trebuchet MS', 'lucida sans';
+}
+
+h1{
+	color:black;
+	text-shadow: 2px 2px 2px black;
+	background-color:#93A891;
+	font-family:Helvetica, Roboto, Gill Sans;
+	text-align:justify;
+	margin:10px;
+	padding: 20px;
+	border-radius: 25px 25px 25px 25px;
+	-moz-border-radius: 25px 25px 25px 25px;
+	-webkit-border-radius: 25px 25px 25px 25px;
+	border: 0px solid #000000;
+}
+
+h2{
+	background: linear-gradient(#CF80FA,#8A02D3);
+	text-align:center;
+	padding:0.2em;
+	text-shadow: 1px 2px 1px #CCC;
+	width:750px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 20px 20px 20px 20px;
+	-moz-border-radius: 20px 20px 20px 20px;
+	-webkit-border-radius: 20px 20px 20px 20px;
+	border: 0px solid #000000;
+	box-shadow: 2px 3px 5px black;
+}
+
+h3{
+	color:#C37207;
+	font-family:Verdana, Geneva, sans-serif;
+	width:auto;
+	text-shadow: 3px 6px 30px #646464;
+}
+
+th{
+	color:white;
+}
+
+table{
+	width:92%;
+	margin:auto;
+	border:none;
+	font: 20px 'trebuchet MS', 'lucida sans';
+}
+
+a{
+	color:white;
+	text-decoration:none;
+	font-size:23px;
+
+}
+
+a:hover {
+  color: #F9F630;
+}
+
+li{
+	text-align:justify;
+}
+
+figcaption {
+	font: 18px 'Bahnschrift Light' ,'trebuchet MS', 'lucida sans' , 'calibri light';
+}
+
+/*>>>Estilos especiales para mi menu de navegacion<<<*/
+
+nav  {
+    display: block;
+    width: 100%;
+	height:auto;
+    overflow: hidden;
+	margin: 0 auto; /*Centrado del contenedor*/
+}
+
+ul {
+	margin: 0.1em;
+    padding: 0.1em;
+    list-style: none;
+    background: #444;
+    background: rgba(0,0,0,.2);
+    border-radius: .5em;
+    box-shadow: 0 1px 0 rgba(255,255,255,.2), 0 2px 1px rgba(0,0,0,.8) inset;
+	text-align:center;
+}
+
+li {
+    display:inline-block;
+}
+
+nav a {
+    float:left;
+    padding: .1em .4em;
+    text-decoration: none;
+    color: #555;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    font: bold 1em/1 'trebuchet MS', Arial, Helvetica;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #fff #ccc #999 #eee;
+    background: #c1c1c1;
+    background: linear-gradient(#f5f5f5, #c1c1c1);
+ }
+
+nav a:hover, nav a:focus {
+    outline: 0;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,.2);
+    background: #fac754;
+    background: linear-gradient(#fac754, #f8ac00);
+}
+
+nav a:active {
+    box-shadow: 0 0 2px 2px rgba(0,0,0,.3) inset;
+}
+
+nav li:first-child a {
+    border-left: 0;
+    border-radius: 4px 0 0 4px;
+}
+
+nav li:last-child a {
+    border-right: 0;
+    border-radius: 0 4px 4px 0;
+}
+
+/*------------------------------------------------Estilos para la pagina por clases--------------------------------------*/
+
+.centrado {
+	text-align:center;
+}
+
+.banner{
+	text-align:left;
+	margin:10px;
+	width: auto;
+	height: auto;
+}
+.titulo{
+	float:right;
+	box-shadow: 4px 4px 4px black inset;
+	text-shadow: 1px 3px 1px #FFFFFF;
+}
+
+.imagensat{
+	border-radius: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	border: 3px solid #000000;
+	width: 40%;
+	height: 35%;
+}
+
+.imagensat:hover{
+	filter: saturate(160%);
+	transition:all .5s ease-in-out;
+}
+
+.imagenbw{
+	border-radius: 40px 40px 40px 40px;
+	-moz-border-radius: 40px 40px 40px 40px;
+	-webkit-border-radius: 40px 40px 40px 40px;
+	border: 4px solid #204a57;
+	height: 25%;
+	width: 30%;
+}
+
+.imagenbw:hover{
+	filter: grayscale(80%);
+	transition:all 1s ease-in-out;
+}
+
+.imagenor{
+	border-radius: 70px 70px 70px 70px;
+	-moz-border-radius: 70px 70px 70px 70px;
+	-webkit-border-radius: 70px 70px 70px 70px;
+	border: 2px solid #000000;
+	width: 60%;
+	height: 55%;
+}
+/*>>>Estilos especiales para la tabla de pieles en "tipos.html"<<<*/
+.titulopieles{
+	 background-color:#2a6d74;
+}
+
+.celta{
+	background-color:#fdeec9;
+}
+
+.germanico{
+	background-color:#f9e1b4;
+}
+
+.caucasica{
+	background-color:#f3d098;
+}
+
+.mediterranea{
+	background-color:#edbf7c;
+}
+
+.mestizas{
+	background-color:#e7ae60;
+}
+
+.negra{
+	background-color:#e3a14b;
+}
+
+/*>>>Estilos especiales para las listas<<<*/
+
+.listilla{
+    counter-reset: li;
+    list-style: none;
+    *list-style: decimal;
+    font: 20px 'trebuchet MS', 'lucida sans';
+    padding: 0;
+    margin-bottom: 4em;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.listilla ol {
+    margin: 0 0 0 2em;
+}
+
+.listilla li{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em 2em;
+    *padding: .4em;
+    margin-left:4%;
+	margin-right:4%;
+	margin-bottom: 3%;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    border-radius: .3em;
+    transition: all .3s ease-out;
+}
+
+.listilla li:hover{
+    background: #eee;
+}
+
+.listilla li:hover:before{
+    transform: rotate(360deg);
+}
+
+.listilla li:before{
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -1.3em;
+    top: 50%;
+    margin-top: -1.3em;
+    background: #87ceeb;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    border: .3em solid #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2em;
+    transition: all .3s ease-out;
+}
+/*---------Fin de lista---------------*/
+
+.listanum {
+    counter-reset: li;
+    list-style: none;
+    *list-style: decimal;
+    font: 20px 'trebuchet MS', 'lucida sans';
+    padding: 0;
+    margin-bottom: 4em;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.listanum ol {
+    margin: 0 0 0 2em;
+}
+
+.listanum {
+    list-style-type: none;
+    list-style-type: decimal !ie; /*IE 7- hack*/
+
+    margin: 0;
+    margin-left: 1em;
+    padding: 0;
+
+    counter-reset: li-counter;
+}
+
+.listanum li{
+    position: relative;
+	display:block;
+    margin-bottom: 1.5em;
+    padding: 1.5em;
+    background-color: #D5CDD7;
+	padding: 1em 1em 1em 1em;
+	margin-left:4%;
+	margin-right:4%;
+}
+
+.listanum li:before {
+    position: absolute;
+    top: -0.3em;
+    left: -0.5em;
+    width: 1.8em;
+    height: 1.2em;
+
+    font-size: 1.3em;
+    line-height: 1.2;
+    font-weight: bold;
+    text-align: center;
+    color: #464646;
+    background-color: #d0d0d0;
+
+    transform: rotate(-20deg);
+    -ms-transform: rotate(-20deg);
+    -webkit-transform: rotate(-20deg);
+    z-index: 99;
+    overflow: hidden;
+
+    content: counter(li-counter);
+    counter-increment: li-counter;
+	border-radius: 200px 200px 200px 200px;
+	-moz-border-radius: 200px 200px 200px 200px;
+	-webkit-border-radius: 200px 200px 200px 200px;
+	border: 0px solid #000000;
+}
+
+/*------------------------Fin Lista-------------------*/
+
+.listasub {
+    counter-reset: li;
+    list-style: none;
+    *list-style: decimal;
+    font: 20px 'trebuchet MS', 'lucida sans';
+    padding: 0;
+    margin-bottom: 4em;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+.listasub ol {
+    margin: 0 0 0 2em;
+}
+
+.listasub li{
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em .8em;
+    *padding: .4em;
+    margin-left:4%;
+	margin-right:4%;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: all .3s ease-out;
+}
+
+.listasub li:hover{
+    background: #eee;
+}
+
+.listasub li:before{
+    position: absolute;
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background: #fa8072;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.listasub li:after{
+    position: absolute;
+    content: '';
+    border: .5em solid transparent;
+    left: -1em;
+    top: 50%;
+    margin-top: -.5em;
+    transition: all .3s ease-out;
+}
+
+.listasub li:hover:after{
+    left: -.5em;
+    border-left-color: #fa8072;
+}
