@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<input lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mundial</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+     <style>
+        #map { height: 480px; }
+     </style>
+     <link rel="stylesheet" href="styles.css" type="text/css"/>
+</head>
+<body>
+    <p>OpenStreetMap - Leaflet</p>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([19.54, -96.90], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        var marker = null;
+
+        function marcador(){
+            var coord1 = document.getElementById("coord1").value;
+            var coord2 = document.getElementById("coord2").value;
+            var msj = document.getElementById("mensaje").value;
+
+            if (marker != null){
+                borrarMarcador();
+            }
+
+            marker = L.marker([coord1, coord2]).addTo(map);
+            marker.bindPopup(msj).openPopup();
+        }
+
+        function borrarMarcador(){
+            map.removeLayer(marker);
+        }
+    </script>
+    <p>Coordenada 1:</p>
+    <input class="form__input" type="text" placeholder="Coordenada 1" id ="coord1" required></input>
+    <p>Coordenada 2:</p>
+    <input class="form__input" type="text" placeholder="Coordenada 2" id="coord2" required></input>
+    <p>Mensaje:</p>
+    <input class="form__input" type="text" placeholder="Mensaje" id="mensaje" required></input>
+    <br>
+    <footer class="botones">
+        <button class="button-21" id="enviar" onclick="marcador()">Colocar Marcador</button>
+        <button class="button-borrar" id="borrar" onclick="borrarMarcador()">Borrar</button>
+    </footer>
+</body>
+</html>
