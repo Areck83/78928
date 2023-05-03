@@ -7,7 +7,7 @@
 // Network
 const char* ssid = "ghost";
 const char* password = "12345678";
-const char* mqtt_server = "192.168.0.100";
+const char* mqtt_server = "192.168.137.1";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -96,10 +96,10 @@ void loop() {
 
   char out[128];
   StaticJsonDocument<256> doc;
-  doc["lat"] = "19";
-  doc["lon"] = "-92";
-  doc["temp"] = "12";
   doc["mensaje"] = "hola";
+  doc["lat"] = 19;
+  doc["long"] = -92;
+  //doc["temp"] = 12;
   //JsonArray data = doc.createNestedArray("coordenadas");
   //data.add("19");
   //data.add("2.38");
@@ -113,6 +113,6 @@ void loop() {
     snprintf (msg, MSG_BUFFER_SIZE, out , value);
     Serial.print("Publicando el mensaje: ");
     Serial.println(msg);
-    client.publish("Mapa",out);
+    client.publish("Testeo",out);
   }
 }
