@@ -13,8 +13,9 @@
 #define DHTpin 15
 DHTesp dht;
 
+//Red
 const char* ssid= "ghost";
-const char* password = "12345678";
+const char* password = "24423212";
 AsyncWebServer server(80);
 
 void setup(){

@@ -1,13 +1,17 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include <DHTesp.h>
+DHTesp dht;
 
 #define DHTPin 15 //D15 del ESP32 DevKit
+#define MQ135_THRESOLD_1 1000
 
-// Network
-const char* ssid = "ghost";
-const char* password = "12345678";
-const char* mqtt_server = "192.168.137.1";
+// Configuracion de la red
+const char* ssid = "ghost"; //Nombre del WiFi
+const char* password = "12345678"; //Cotra del WiFi
+const char* mqtt_server = "192.168.137.1"; //Conexion del MQTT
+const unsigned int frecuenciaEscritura = 2500;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -84,15 +88,63 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
+
 }
 
 void loop() {
 
+  //Para que se conecte al WiFi
   if (!client.connected()) {
     reconnect();
   }
   client.loop();
 
+  //Parte del sensor de humedad
+  delay(dht.getMinimumSamplingPeriod());
+  float humedad = dht.getHumidity();
+  float temperatura = dht.getTemperature();
+
+  //Debugger para verificar que está leyendo el DHT
+  if (isnan(humedad) || isnan(temperatura)){
+    Serial.print("No se pudo leer el sensor DHT");
+    return;
+  }
+  Serial.print(dht.getStatusString());
+  Serial.print("\t");
+  Serial.print(humedad,1);
+  Serial.print("\t\t");
+  Serial.print(temperatura,1);
+  Serial.print("\t\t");
+  Serial.print(dht.toFahrenheit(temperatura),1);
+  Serial.print("\t\t");
+  Serial.print(dht.computeHeatIndex(temperatura, humedad, false), 1);
+  Serial.print("\t\t");
+  Serial.println(dht.computeHeatIndex(dht.toFahrenheit(temperatura), humedad, true), 1);
+  delay(2000);
+
+  //Parte del sensor de calidad de aire MQ135
+  int MQ135_info = analogRead(A0);
+  if (MQ135_info < MQ135_THRESOLD_1){
+    Serial.print("Aire fresquito");
+  } else{
+    Serial.print("Aire deplorable salte de ahi");
+  }
+
+  Serial.print(MQ135_info); //Datos analogos
+  Serial.print("PPM"); //Recordar que en quimica eso es partes por millon
+
+  //Este es el codigo del de mosquitto para enviar los datos en crudo
+  //unsigned long now = millis();
+  //if (now - lastMsg > 2000) {
+  //  lastMsg = now;
+  //  ++value;
+  //  snprintf (msg, MSG_BUFFER_SIZE, "En el 402 el equipo 7 #%ld", value);
+  //  Serial.print("Publicar mensaje: ");
+  //  Serial.println(msg);
+  //  client.publish("fei/cc1/temperatura", dtostrf(temperatura, 6, 2, msg));
+  //}
+
+  //Generacion de un JSON que se va a enviar hacia el MQTT
   char out[128];
   StaticJsonDocument<256> doc;
   doc["mensaje"] = "hola";
@@ -105,6 +157,7 @@ void loop() {
   //doc["data"]=data;
   serializeJson(doc, out);
 
+  //Codigo correspondiente a Json
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
@@ -112,6 +165,7 @@ void loop() {
     snprintf (msg, MSG_BUFFER_SIZE, out , value);
     Serial.print("Publicando el mensaje: ");
     Serial.println(msg);
+    //Cambiar el topico de Testeo por el adecuado
     client.publish("Testeo",out);
   }
 }
