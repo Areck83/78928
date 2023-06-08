@@ -1,30 +1,28 @@
-#include <DHTesp.h>
-#include "DHTesp.h"
-#include <Arduino.h>
-#include <ArduinoJson.h>
+//Test pre final. Este codigo lee los valores del DHT11.
+//Se conecta y suscribe al broker de mosquito en el topico especificado. 
+//Se configura la hora al ESP32 manualmente y se toman esos valores.
+//Se envia un JSON de reporte de prueba para el proyecto final. 
+
+//Librerias
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <NTPClient.h> //Libreria de Taranais
-#include <WiFiUdp.h>
-#include "MQ135.h"//++
-#define DHTpin 15 //Numero de Pin
-#define PIN_MQ135 34
-DHTesp dht;
+#include <DHTesp.h>
+#include <ArduinoJson.h>
+#include <ESP32Time.h>
+#include "MQ135.h"
 
-//Definiciond del cliente NTP para los datos de tiempo
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+#define DHTPin 15 //D15 del ESP32 DevKit
+ESP32Time rtc(3600); 
+DHTesp dht; 
 
-//Variables para el tiempo y fecha
-String formattedDate;
-String fecha;
-String tiempo;
+const int mq135pin = 26;
 
 //Red
-const char* ssid= "Issac";
+const char* ssid = "Issac";
 const char* password = "xpe53u92";
-const char* mqtt_server = "192.168.137.1";
+const char* mqtt_server = "test.mosquitto.org"; //Broker mosquito
 
+//Config para mosquitto
 WiFiClient espClient;
 PubSubClient client(espClient);
 unsigned long lastMsg = 0;
@@ -32,8 +30,9 @@ unsigned long lastMsg = 0;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
-//Obtener internet de el WiFi definido previamente
+//Wifi
 void setup_wifi() {
+
   delay(10);
   Serial.println();
   Serial.print("Conectando a ");
@@ -44,198 +43,165 @@ void setup_wifi() {
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(">");
+    Serial.print(".");
   }
 
   randomSeed(micros());
 
   Serial.println("");
-  Serial.println("WIFI CONECTADO");
+  Serial.println("WiFi connectado");
   Serial.println("Direccion IP: ");
   Serial.println(WiFi.localIP());
-  timeClient.begin();
-  timeClient.setTimeOffset(-21600);//Esta es la zona horaria GMT -6 MX
 }
 
-//Mostrar los mensajes del topico
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Mensaje recibido [");
+  Serial.print("Mensaje recibido en el topico [");
   Serial.print(topic);
   Serial.print("] ");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
-
   if ((char)payload[0] == '1') {
     digitalWrite(2, HIGH);
   } else {
     digitalWrite(2, LOW);
   }
+
 }
 
-//Intentar la conexion con MQTT las veces que sea posible
-void reconnect() { 
+void reconnect() {
   while (!client.connected()) {
-    Serial.print("Intentando una conexion con MQTT...");
-
-    //Random ID for our client
-    String clientId = "ESP8266Client-";
+    Serial.print("Intentando una conexion MQTT...");
+    // Crear un ID de cliente aleatorio
+    String clientId = "ESP32Client-";
     clientId += String(random(0xffff), HEX);
-
+    // Intentar conectar
     if (client.connect(clientId.c_str())) {
       Serial.println("conectado");
-      //Aqui debe de ir la ruta del tema y el elemento a enviar
-      client.publish("test", "temperatura");
-      client.subscribe("inTopic");
+      client.subscribe("test/esp32/hilox");
+      Serial.println("Suscrito al topico indicado");
     } else {
       Serial.print("Conexion fallida, rc=");
       Serial.print(client.state());
       Serial.println(" Intentando de nuevo en 5 segundos");
+      // Wait 5 seconds before retrying
       delay(5000);
     }
   }
 }
 
-
-void setup(){
-  //++
-  pinMode(34, INPUT);
-
+void setup() {
+  pinMode(2, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
+  dht.setup(DHTPin, DHTesp::DHT11); //Configuracion de pin de datos
+  rtc.setTime(00, 57, 19, 7, 6, 2023);
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 }
 
-void loop(){
-  //++
-  MQ135 gasSensor = MQ135(34); //pin del sensor
-  float air_quality = gasSensor.getPPM();
-  Serial.print(air_quality);
-  Serial.println("PPM");
+void loop() {
+  bool peligro;
+  int sensorValue = analogRead(mq135pin);
+
+  String hora = rtc.getTime();
+  String dia = String(rtc.getDay());
+  String mes = String(rtc.getMonth());
+  String anio = String(rtc.getYear());
+  String fecha = dia+"/"+mes+"/"+anio;
 
   if (!client.connected()) {
     reconnect();
   }
   client.loop();
 
-  while(!timeClient.update()){
-    timeClient.forceUpdate();
-  }
+  delay(dht.getMinimumSamplingPeriod());
 
-  formattedDate = timeClient.getFormattedDate();
-  Serial.println(formattedDate);
-  
-  //Separar los valores devueltos por el formattedDate
-  int splitT = formattedDate.indexOf("T");
-  fecha = formattedDate.substring(0,splitT);
-  Serial.println(fecha);
-
-  tiempo = formattedDate.substring(splitT+1, formattedDate.length()-1);
-  Serial.println(tiempo);
-
-  bool peligro = false;
-
-  //Definicion del json
-  char out[128];
-  StaticJsonDocument<256> doc;
-
-  //Verificar que todos los datos se estan leyendo en la consola
-  //Leer siempre
-  delay(dht.getMinimumSamplingPeriod()); //Establece el minimo periodo de sampleo
-  float humedad =  dht.getHumidity();
+  float humedad = dht.getHumidity();
   float temperatura = dht.getTemperature();
-  if (isnan(humedad) || isnan(temperatura)){ //Si no es un numero
-    Serial.println("No se pudo leer sensor DHT!");
+
+  if (isnan(humedad) || isnan(temperatura)){
+    Serial.print("No se pudo leer el sensor DHT");
     return;
   }
 
-  //Imprimir los valores en consola
+  //Este codigo es agregado para el dht11 
   Serial.print( dht.getStatusString() );
   Serial.print("\t");
+  Serial.print("humedad:");
   Serial.print(humedad, 1);
   Serial.print("\t\t");
+  Serial.print("C:");
   Serial.print(temperatura, 1);
   Serial.print("\t\t");
+  Serial.print("FH:");
   Serial.print( dht.toFahrenheit(temperatura), 1);
   Serial.print("\t\t");
+  Serial.print("IndiceCalor:");
   Serial.print( dht.computeHeatIndex(temperatura, humedad, false), 1);
   Serial.print("\t\t");
+  Serial.print("IndiceCalorF:");
   Serial.println(dht.computeHeatIndex(dht.toFahrenheit(temperatura), humedad, true), 1);
-  delay(2000);
+  delay(30000);
 
-  int hum = getHumedad().toInt();
-  int temp = getTempC().toInt();
-
-  if((hum>15) && (temp<14)){
-    peligro = true;
-  }
-
-  if (peligro == true){
-    doc["esp32"] = "chuncheTest";
-    doc["mensaje"] = "Posible peligro de incendio";
-    doc["hora"] = tiempo;
-    doc["fecha"] = fecha;
-    doc["lat"] = 19;
-    doc["lon"] = -92;
+  //Definicion del JSON
+  char reporte[128];
+  StaticJsonDocument<256> mensaje;
+  if ( (getHumedad()<10) && (getTempC()>45)){
+    mensaje["ESP32"]="Test1"; 
+    mensaje["mensaje"]="Posible riesgo de incendio";
+    mensaje["hora"]=hora;
+    mensaje["fecha"]=fecha;
+    mensaje["lat"]="19";
+    mensaje["lon"]="-96";
   }else{
-    doc["esp32"] = "chuncheTest";
-    doc["mensaje"] = "Valores normales";
-    doc["hora"] = tiempo;
-    doc["fecha"] = fecha;
-    doc["lat"] = 19;
-    doc["lon"] = -92;
+    mensaje["ESP32"]="Test1";
+    mensaje["mensaje"]="Valores normales";
+    mensaje["hora"]=hora;
+    mensaje["fecha"]=fecha;
+    mensaje["lat"]="19";
+    mensaje["lon"]="-96";
   }
 
-  serializeJson(doc, out);
+  serializeJson(mensaje,reporte);
 
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    snprintf (msg, MSG_BUFFER_SIZE,out,value);
-    Serial.print("Publicando el mensaje: ");
+    snprintf (msg, MSG_BUFFER_SIZE, "Este texto es de prueba#%ld", value);
+    Serial.print("Publicando mensaje: ");
     Serial.println(msg);
-    client.publish("Test",out);
+    client.publish("test/esp32/hilox", reporte);
   }
 }
 
-String getHumedad(){
+float getHumedad(){
   float humedad =  dht.getHumidity();
-  String valor= "";
-  valor.concat(humedad);
-  return valor;
+  return humedad;
 }
 
-String getTempC(){
+float getTempC(){
   float temperatura = dht.getTemperature();
-  String tempc= "";
-  tempc.concat(temperatura);
-  return tempc;
+  return temperatura;
 }
 
-String getTempF(){
+float getTempF(){
   float temperatura = dht.toFahrenheit(temperatura);
-  String tempf = "";
-  tempf.concat(temperatura);
-  return tempf;
+  return temperatura;
 }
 
-String getCalorC(){
+float getCalorC(){
   float humedad =  dht.getHumidity();
   float temperatura = dht.getTemperature();
   float calor =  dht.computeHeatIndex(temperatura, humedad, false);
-  String valor= "";
-  valor.concat(calor);
-  return valor;
+  return calor;
 }
 
-String getCalorF(){
+float getCalorF(){
   float humedad =  dht.getHumidity();
   float temperatura = dht.getTemperature();
   float calor =  dht.computeHeatIndex(dht.toFahrenheit(temperatura), humedad, true);
-  String valor= "";
-  valor.concat(calor);
-  return valor;
+  return calor;
 }

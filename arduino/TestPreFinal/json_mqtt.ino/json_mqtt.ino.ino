@@ -1,16 +1,24 @@
+//Test pre final. Este codigo lee los valores del DHT11.
+//Se conecta y suscribe al broker de mosquito en el topico especificado. 
+//Se configura la hora al ESP32 manualmente y se toman esos valores.
+//Se envia un JSON de reporte de prueba para el proyecto final. 
+
+//Librerias
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <DHTesp.h>
+#include <ArduinoJson.h>
+#include <ESP32Time.h>
 #define DHTPin 15 //D15 del ESP32 DevKit
+ESP32Time rtc(3600); 
 DHTesp dht; 
 
-// Update these with values suitable for your network.
-
+//Red
 const char* ssid = "Issac";
 const char* password = "xpe53u92";
-const char* mqtt_server = "test.mosquitto.org";
-//const char* mqtt_server = "192.168.0.100";
+const char* mqtt_server = "test.mosquitto.org"; //Broker mosquito
 
+//Config para mosquitto
 WiFiClient espClient;
 PubSubClient client(espClient);
 unsigned long lastMsg = 0;
@@ -18,6 +26,7 @@ unsigned long lastMsg = 0;
 char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
+//Wifi
 void setup_wifi() {
 
   delay(10);
@@ -43,27 +52,22 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Mensaje recibido [");
+  Serial.print("Mensaje recibido en el topico [");
   Serial.print(topic);
   Serial.print("] ");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
-
-  // Switch on the LED if an 1 was received as first character
   if ((char)payload[0] == '1') {
-    digitalWrite(2, HIGH);   // Turn the LED on (Note that LOW is the voltage level
-    // but actually the LED is on; this is because
-    // it is active low on the ESP-01)
+    digitalWrite(2, HIGH);
   } else {
-    digitalWrite(2, LOW);  // Turn the LED off by making the voltage HIGH
+    digitalWrite(2, LOW);
   }
 
 }
 
 void reconnect() {
-  // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Intentando una conexion MQTT...");
     // Crear un ID de cliente aleatorio
@@ -72,10 +76,8 @@ void reconnect() {
     // Intentar conectar
     if (client.connect(clientId.c_str())) {
       Serial.println("conectado");
-      // Once connected, publish an announcement...
-      client.publish("test/esp32/hilox", "hola perre");
-      // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subscribe("test/esp32/hilox");
+      Serial.println("Suscrito al topico indicado");
     } else {
       Serial.print("Conexion fallida, rc=");
       Serial.print(client.state());
@@ -91,11 +93,17 @@ void setup() {
   Serial.begin(115200);
   setup_wifi();
   dht.setup(DHTPin, DHTesp::DHT11); //Configuracion de pin de datos
+  rtc.setTime(00, 57, 19, 7, 6, 2023);
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
 }
 
 void loop() {
+  String hora = rtc.getTime();
+  String dia = String(rtc.getDay());
+  String mes = String(rtc.getMonth());
+  String anio = String(rtc.getYear());
+  String fecha = dia+"/"+mes+"/"+anio;
 
   if (!client.connected()) {
     reconnect();
@@ -118,21 +126,40 @@ void loop() {
   Serial.print(humedad,1);
   Serial.print("\t\t");
   Serial.print(temperatura,1);
-  Serial.print("\t\t");
-  Serial.print(dht.toFahrenheit(temperatura),1);
-  Serial.print("\t\t");
-  Serial.print(dht.computeHeatIndex(temperatura, humedad, false), 1);
-  Serial.print("\t\t");
-  Serial.println(dht.computeHeatIndex(dht.toFahrenheit(temperatura), humedad, true), 1);
   delay(2000);
+
+  char reporte[128];
+  StaticJsonDocument<256> mensaje;
+  mensaje["ESP32"]="Test1"; 
+  mensaje["mensaje"]="Valores normales";
+  mensaje["hora"]=hora;
+  mensaje["fecha"]=fecha;
+  mensaje["lat"]="19";
+  mensaje["lon"]="-96";
+
+  serializeJson(mensaje,reporte);
 
   unsigned long now = millis();
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    snprintf (msg, MSG_BUFFER_SIZE, "Esta es una prueba previa al dia final de la evaluacion #%ld", value);
+    snprintf (msg, MSG_BUFFER_SIZE, "Este texto es de prueba#%ld", value);
     Serial.print("Publicando mensaje: ");
     Serial.println(msg);
-    client.publish("test/esp32/hilox", dtostrf(temperatura, 6, 2, msg));
+    client.publish("test/esp32/hilox", reporte);
   }
+}
+
+String getHumedad(){
+  float humedad =  dht.getHumidity();
+  String valor= "";
+  valor.concat(humedad);
+  return valor;
+}
+
+String getTempC(){
+  float temperatura = dht.getTemperature();
+  String tempc= "";
+  tempc.concat(temperatura);
+  return tempc;
 }
